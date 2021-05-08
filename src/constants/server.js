@@ -6,6 +6,13 @@ module.exports = {
         authorization: {
             login: "auth/login",
             registration: "auth/register"
+        },
+        open: {
+            path: "open/",
+            film: {
+                path: "film/",
+                all: "get",
+            }
         }
     }
 }

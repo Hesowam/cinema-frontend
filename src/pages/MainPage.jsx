@@ -7,23 +7,27 @@ import AuthenticationPage from '../pages/AuthenticationPage'
 import PreviewPage from "./PreviewPage.jsx";
 
 import LocalStorageService from "../services/LocalStorageService";
+import FilmServise from "../services/FilmService";
 
 export default class MainPage extends Component {
     constructor(props, context) {
         super(props, context);
         this.state = {
-            user: LocalStorageService.isActive()
+            user: LocalStorageService.isActive(),
+            userData: LocalStorageService.getUser(),
+            recently: []
         }
     }
 
+
     render() {
         return (
-            <div style={{backgroundColor: "#020916", height: "1080px"}}>
-                <BrowserRouter>
-                    <NavBarComponent/>
+            <div className="body">
+               <BrowserRouter>
+                    <NavBarComponent user={this.state.userData} isUser={this.state.user}/>
                     {this.state.user == false ?
                         <BrowserRouter>
-                            <Route path="/" component={AuthenticationPage}/></BrowserRouter>
+                            <Route path="/"><AuthenticationPage user={this.state.user} /></Route></BrowserRouter>
                         :
                         <BrowserRouter>
                             <Route path="/" component={PreviewPage}/>

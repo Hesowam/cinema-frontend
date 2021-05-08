@@ -18,6 +18,7 @@ class AuthenticationService {
             }
         } ).then(res => {
             if ( res.data.token ) {
+                console.log(res.data)
                 localStorage.setItem( "user", JSON.stringify(res.data) );
             }
         }).catch(e => {console.log(e)});
