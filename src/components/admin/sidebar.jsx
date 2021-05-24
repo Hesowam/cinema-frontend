@@ -47,8 +47,6 @@ export default function PermanentDrawerLeft() {
                     {label: 'Roles', link: "/admin/roles", icon: <AdbIcon/>},
                     {label: 'Films', link: "/admin/films", icon: <MovieIcon/>},
                     {label: 'Genres', link: "/admin/genres", icon: <Filter6Icon/>},
-                    {label: 'Characters', link: "/admin/characters", icon: <SupervisedUserCircleIcon/>},
-                    {label: 'Episodes', link: "/admin/episodes", icon: <TheatersIcon/>},
                 ].map((obj, index) => (
                     <Link to={obj.link} className="link">
                         <ListItem button key={obj.label}>

@@ -63,7 +63,7 @@ export default class Registration extends Component {
         const password = this.state.password;
         const email = this.state.email;
 
-        if (email.indexOf("@") == -1 || email.indexOf(".") == -1 || password.length < 6 || username.length < 6 || email.length < 5){
+        if (password.length < 6 || username.length < 6 || email.length < 5){
             this.setState({error: true, errorText: "You entered invalid data"});
             setTimeout(()=> {this.setState({error: false, errorText: ""});}, 1000)
             return false;

@@ -16,7 +16,6 @@ function AllFilmsComponent({films, getFilms}) {
     return (
         <div className="__container_1200">
             <Wrapper films={films.films}/>
-            <Pagination count={10} variant="outlined" shape="rounded" className="pagination" onChange={(v)=> setPage(v.target.innerText)}/>
         </div>
     )
 }

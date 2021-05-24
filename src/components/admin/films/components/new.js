@@ -2,6 +2,8 @@ import Paper from "@material-ui/core/Paper";
 import React, {useState} from "react";
 import {Button, Chip, MenuItem, TextField} from "@material-ui/core";
 import axios from 'axios';
+import Upload from "../../../upload/Upload";
+import FilmService from "../../../../services/FilmService";
 
 export default function NewFilm({genres}) {
     const [genre, setGenre] = React.useState('Action');
@@ -20,47 +22,28 @@ export default function NewFilm({genres}) {
         setGenreList(genreList.concat(genres.genres.find((_g) => _g.name == e.target.value)));
     }
 
-    const onPosterUpload = () => {
-        const formData = new FormData();
-
-        formData.append(
-            `${name}-${new Date()}-poster`,
-            posterFile,
-            posterFile.name
-        );
-
-        axios.post("img/", formData);
-    };
+    const submitFiles = (action, payload) => {
+        switch (action) {
+            case "SET_POSTER":
+                setPosterFile(payload);
+            case "SET_BACKGROUND":
+                setBackgroundFile(payload);
+        }
+    }
 
     const onSubmit = () => {
-        if (name.length > 3 && episodes >= 1 && kpkId.length && trailer.length && description.length && posterFile!=null && backgroundFile != null){
+        if (name && episodes && kpkId && trailer && description && posterFile && backgroundFile && name.length > 3 && episodes >= 1 && kpkId.length && trailer.length && description.length && posterFile.length && backgroundFile.length) {
             let submitData = {
                 name,
                 episodes,
                 kpkId,
                 description,
                 trailer,
+                background: "http://45.141.76.252:8000/" + backgroundFile,
+                poster: "http://45.141.76.252:8000/" + posterFile,
+                genresIds: genreList.map((_g) => _g.id)
             }
-
-            const formBackgroundData = new FormData();
-            const formPosterData = new FormData();
-
-            formBackgroundData.append(
-                `${name}-${new Date()}-background`,
-                backgroundFile,
-                backgroundFile.name
-            );
-            formPosterData.append(
-                `${name}-${new Date()}-poster`,
-                posterFile,
-                posterFile.name
-            );
-
-            axios.post("./img/", formBackgroundData).then((res)=>{
-                console.log(res)
-            });
-
-            console.log(submitData)
+            FilmService.create(submitData).then(() => alert("ok"))
         }
     }
 
@@ -73,14 +56,14 @@ export default function NewFilm({genres}) {
                     className="input"
                     label="Film name"
                     variant="outlined"
-                    onChange={(e)=> setName(e.target.value)}
+                    onChange={(e) => setName(e.target.value)}
                     style={{width: "400px"}}
                 />
                 <TextField
                     error={false}
                     className="input"
                     label="Kinopoisk id"
-                    onChange={(e)=> setKpkId(e.target.value)}
+                    onChange={(e) => setKpkId(e.target.value)}
                     variant="outlined"
                     style={{width: "200px"}}
                 />
@@ -91,7 +74,7 @@ export default function NewFilm({genres}) {
                     error={false}
                     label="Youtube trailer link"
                     // helperText="Incorrect entry."
-                    onChange={(e)=> setTrailer(e.target.value)}
+                    onChange={(e) => setTrailer(e.target.value)}
                     variant="outlined"
                     style={{width: "400px"}}
                 />
@@ -100,7 +83,7 @@ export default function NewFilm({genres}) {
                     error={false}
                     label="Episodes"
                     // helperText="Incorrect entry."
-                    onChange={(e)=> setEpisodes(e.target.value)}
+                    onChange={(e) => setEpisodes(e.target.value)}
                     variant="outlined"
                     style={{width: "200px"}}
                 />
@@ -110,7 +93,7 @@ export default function NewFilm({genres}) {
                     id="outlined-select-currency"
                     select
                     label="Add genre"
-                    onChange={(e)=> {
+                    onChange={(e) => {
                         let newArray = [];
                         newArray.push(genres.genres.find((_g) => _g.name == e.target.value));
                         setGenreList([...new Set([...genreList, ...newArray])])
@@ -125,13 +108,13 @@ export default function NewFilm({genres}) {
                     ))}
                 </TextField>
                 <div className="genres_map">
-                    {genreList.map((_g)=>  <Chip
+                    {genreList.map((_g) => <Chip
                         label={_g.name}
                         className="_genre_list"
                         key={_g.id}
                         variant="outlined"
                         onDelete={() => {
-                            if (genreList.length <=1 ){
+                            if (genreList.length <= 1) {
                                 setGenreList([]);
                             } else {
                                 setGenreList(genreList.filter((_genre => _genre.name != _g.name)))
@@ -142,17 +125,11 @@ export default function NewFilm({genres}) {
             </div>
             <p>Description</p>
             <div className="form">
-                <textarea className="_text_area" onChange={(e)=> setDescription(e.target.value)}/>
+                <textarea className="_text_area" onChange={(e) => setDescription(e.target.value)}/>
             </div>
-            <p>Upload poster</p>
-            <div className="form">
-                <input type="file" className="_file" onChange={(e)=> {setPosterFile(e.target.files[0])}}/>
-            </div>
-            <p>Upload background</p>
-            <div className="form">
-                <input type="file" className="_file" onChange={(e)=> {setBackgroundFile(e.target.files[0])}}/>
-            </div>
-            <Button variant="contained" color="primary" onClick={onSubmit}>
+            <Upload type={"background"} action={"SET_BACKGROUND"} submit={submitFiles}/>
+            <Upload type={"poster"} action={"SET_POSTER"} submit={submitFiles}/>
+            <Button variant="contained" color="primary" className="mb-5" onClick={onSubmit}>
                 Submit
             </Button>
         </Paper>

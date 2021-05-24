@@ -1,6 +1,4 @@
 import axios from "axios";
-import LocalStorageService from "../../services/LocalStorageService";
-import {getFilms} from "./films";
 import ServerException from "../../exceptions/ServerException";
 
 const SERVER_CONFIG = require('../../constants/server')

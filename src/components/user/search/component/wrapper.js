@@ -26,7 +26,6 @@ export default function WrapperSearchComponent({films}) {
                       alignItems="left"
                       justifyContent="space-between"
                 >
-                    {console.log(films.length + "films")}
                     {films.length && films.map(film => card(film))}
                 </Grid>
         </div>

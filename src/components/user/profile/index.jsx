@@ -7,6 +7,8 @@ import SettingsOutlinedIcon from '@material-ui/icons/SettingsOutlined';
 
 import films, {getUsersFilms as getUserFilmsAction} from "../../../redux/modules/films";
 import Settings from "./components/settings";
+import UserService from "../../../services/UserService";
+import LocalStorageService from "../../../services/LocalStorageService";
 
 const SETTINGS = 'SETTINGS';
 const WATCHED = 'WATCHED';
@@ -25,14 +27,19 @@ function ProfileComponent({films, getUsersFilms, deleteFromWatched}) {
         })
     }
 
+    const logOut = () => {
+        localStorage.removeItem('user');
+        window.location.reload();
+    }
+
     return (
         <div className="profile_container">
             <div className="profile-data">
-                <img src="https://avatars.githubusercontent.com/u/39910684?v=4" alt=""/>
+                <img src={LocalStorageService.getUser().mainPictureUrl} alt=""/>
                 <h2>Username</h2>
                 <h3>boosth14@gmail.com</h3>
                 <p>Watched: {films.userFilms.length}</p>
-                <div className="_logout_button">Log out</div>
+                <div className="_logout_button" onClick={logOut}>Log out</div>
             </div>
             <div className="profile_content">
                 <div className="__tabs">

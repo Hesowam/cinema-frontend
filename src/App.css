@@ -967,6 +967,7 @@ h2 {
 .__container_1200 {
     width: 1062px;
     margin: auto;
+    margin-bottom: 100px;
 }
 
 .__container_1200 .wrapper-card {
@@ -1040,4 +1041,26 @@ h2 {
 
 ._tabs {
     margin-top: -5px;
+}
+
+._modal {
+    margin-top: auto;
+    width: 700px!important;
+    background-color: white;
+    border: 2px solid #000;
+    padding: 2px;
+}
+
+.input-group {
+    flex-direction: row !important;
+    flex-wrap: nowrap !important;
+}
+
+._form_input {
+    height: 40px;
+    border: 1px solid #CED4DA;
+    border-radius: 0px;
+    width: 100%;
+    background-color: white;
+    color: black;
 }

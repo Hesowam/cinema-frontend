@@ -5,6 +5,8 @@ import './css/main.css'
 
 import FilmsComponent from "./films";
 import UsersComponent from './users';
+import GenresComponent from './genres';
+import RolesComponent from './roles';
 import SidebarComponent from './sidebar'
 import NavigationBarComponent from "./navbar";
 
@@ -39,8 +41,10 @@ export default class Index extends Component{
                     <SidebarComponent/>
                     <div style={style.content}>
                             <Switch>
-                                <Route keyProp={1} exact path="/admin/films"><FilmsComponent/></Route>
+                                <Route keyProp={1} exact path={["/admin/films", "/admin/"]}><FilmsComponent/></Route>
                                 <Route keyProp={2} exact path="/admin/users"><UsersComponent/></Route>
+                                <Route keyProp={2} exact path="/admin/genres"><GenresComponent/></Route>
+                                <Route keyProp={2} exact path="/admin/roles"><RolesComponent/></Route>
                             </Switch>
                     </div>
                 </Router>

@@ -1,10 +1,10 @@
 import React, {useEffect, useState} from "react";
 import {connect} from "react-redux";
 
-import {getRoles as getRolesAction} from "../../../redux/modules/roles";
-import {getUsers as getUsersAction} from "../../../redux/modules/users";
+import {getGenres as getGenresAction} from "../../../redux/modules/genres";
 
 import Table from './components/table';
+import NewFilm from "./components/new";
 import Box from "@material-ui/core/Box";
 import Typography from "@material-ui/core/Typography";
 import PropTypes from "prop-types";
@@ -55,12 +55,11 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 
-function UsersAdminComponent ({users, getUsers, roles, getRoles}){
+function RolesAdminComponent ({genres, getGenres}){
     const [value, setValue] = React.useState(0);
 
     useEffect(()=> {
-        getUsers();
-        getRoles();
+        getGenres();
         }, [])
 
     const handleChange = (event, newValue) => {
@@ -75,19 +74,23 @@ function UsersAdminComponent ({users, getUsers, roles, getRoles}){
             <AppBar position="static" className="_tabs">
                 <Tabs value={value} onChange={handleChange} aria-label="simple tabs example">
                     <Tab label="All records" {...a11yProps(0)} />
+                    <Tab label="Create new record" {...a11yProps(1)} />
                 </Tabs>
             </AppBar>
             <TabPanel value={value} index={0}>
-                    <Table users={users} roles={roles}/>
+                    <Table genres={genres}/>
+            </TabPanel>
+            <TabPanel value={value} index={1}>
+                {console.log(genres)}
+                <NewFilm genres={genres}/>
             </TabPanel>
         </div>
     )
 }
 
 export default connect(
-    ({users, roles}) => ({users, roles}),
+    ({genres}) => ({genres}),
     {
-        getUsers: getUsersAction,
-        getRoles: getRolesAction
+        getGenres: getGenresAction
     }
-)(UsersAdminComponent)
+)(RolesAdminComponent)

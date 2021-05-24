@@ -9,20 +9,18 @@ import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import EditIcon from '@material-ui/icons/Edit';
 import DeleteOutlineIcon from '@material-ui/icons/DeleteOutline';
-import {Button, Chip, Fade, FormControl, InputBase} from "@material-ui/core";
+import {Button, Fade, FormControl, InputBase} from "@material-ui/core";
 import Typography from "@material-ui/core/Typography";
 import Backdrop from '@material-ui/core/Backdrop';
 import Modal from "@material-ui/core/Modal";
-import {Form, InputGroup} from "react-bootstrap";
+import {InputGroup} from "react-bootstrap";
 import FilmService from "../../../../services/FilmService";
 import RoleService from "../../../../services/RoleService";
 import GenreService from "../../../../services/GenreService";
-import UserService from "../../../../services/UserService";
 
 const columns = [
     {id: 'id', label: 'Id', minWidth: 30},
     {id: 'name', label: 'Name', minWidth: 100},
-    {id: 'role', label: 'Roles', minWidth: 100},
     {
         id: 'created',
         label: 'Created on',
@@ -78,28 +76,25 @@ const useStyles = makeStyles({
         boxShadow: 5,
         padding: 15,
         width: 700,
-        height: 200,
+        height: 400,
     },
 });
 
-export default function UsersAdminComponent({users, roles}) {
+export default function GenresAdminComponent({genres}) {
     const classes = useStyles();
     const [input, setInput] = React.useState('');
     const [filmsRows, setFilmsRows] = React.useState([]);
     const [open, setOpen] = React.useState(false);
-    const [edit, setEdit] = React.useState(undefined);
+    const [edit, setEdit] = React.useState({});
 
     const [name, setName] = React.useState("");
 
     useEffect(() => {
+        console.log(genres)
         if (input.length <= 0) {
-            setFilmsRows(users.users)
+            setFilmsRows(genres.genres)
         }
     })
-
-    const deleteUser =  (id) => {
-        UserService.delete(id);
-    }
 
     const update = () => {
         const toUpdate = {
@@ -117,15 +112,17 @@ export default function UsersAdminComponent({users, roles}) {
     };
 
 
-    const onDeleteRole = (role) => {
-        UserService.deleteRole(role.id, edit.id).then(()=> alert("ok"));
-    }
-
     const handleChangeInput = (e) => {
         setInput(e.target.value)
-        const result = users.users.filter(value => value.username.toLowerCase().search(e.target.value.toLowerCase()) != -1 && value);
+        const result = genres.genres.filter(value => value.name.toLowerCase().search(e.target.value.toLowerCase()) != -1 && value);
         setFilmsRows(result || [])
     }
+
+    const handleSearch = () => {
+        const result = genres.genres.filter(value => value.name.toLowerCase().search(input.toLowerCase()) != -1 && value);
+        setFilmsRows(result || [])
+    }
+
     const formatData = (time) => {
         let con = "0";
         if (time < 10) {
@@ -134,8 +131,8 @@ export default function UsersAdminComponent({users, roles}) {
         return time;
     }
 
-    const addRole = (e) => {
-        UserService.addRole(e.target.value, edit.id);
+    const onDelete = (id) => {
+        GenreService.delete(id);
     }
 
     return (
@@ -143,8 +140,8 @@ export default function UsersAdminComponent({users, roles}) {
             <Typography className={classes.title} variant="h6" id="tableTitle" component="div">
                 <InputBase
                     className={classes.input}
-                    placeholder="Search users by name"
-                    inputProps={{'aria-label': 'search users'}}
+                    placeholder="Search genre by name"
+                    inputProps={{'aria-label': 'search genres'}}
                     onChange={handleChangeInput}
                 />
             </Typography>
@@ -170,10 +167,7 @@ export default function UsersAdminComponent({users, roles}) {
                                     {row.id}
                                 </TableCell>
                                 <TableCell>
-                                    {row.username}
-                                </TableCell>
-                                <TableCell>
-                                    {row.roles.map(r => `(${r.name}) `)}
+                                    {row.name}
                                 </TableCell>
                                 <TableCell>
                                     {`(${formatData(new Date(row.created).getHours())}:${formatData(new Date(row.created).getMinutes())}) ${formatData(new Date(row.created).getDate())}.${formatData(new Date(row.created).getMonth())}.${new Date(row.created).getUTCFullYear()}`}
@@ -189,9 +183,7 @@ export default function UsersAdminComponent({users, roles}) {
                                         }}/>
                                     </div>
                                     <div className="actions">
-                                        <DeleteOutlineIcon className="table_icon" onClick={()=>{
-                                            deleteUser(row.id)
-                                        }}/>
+                                        <DeleteOutlineIcon className="table_icon" onClick={(e) => onDelete(row.id)}/>
                                     </div>
                                 </TableCell>
                             </TableRow>
@@ -211,27 +203,21 @@ export default function UsersAdminComponent({users, roles}) {
                     timeout: 500,
                 }}
             >
-                {edit && <Fade in={open}>
+                <Fade in={open}>
                     <div className={[classes.paper]}>
                         <p>Edit {edit.name}</p>
-                        <Form>
-                            <Form.Group controlId="exampleForm.ControlSelect1">
-                                <Form.Label>Roles</Form.Label>
-                                <Form.Control as="select" onChange={addRole}>
-                                    {roles.roles.length > 1 ? roles.roles.map(r =>
-                                        <option value={r.id}>{r.name}</option>
-                                    ) : <option>No content</option>}
-                                </Form.Control>
-                            </Form.Group>
-                            {edit.roles.map(r => <Chip
-                                label={r.name}
-                                onDelete={()=>onDeleteRole(r)}
-                                style={{marginRight: 10}}
-                                variant="outlined"
-                            />)}
-                        </Form>
+                        <InputGroup className="mb-3">
+                            <InputGroup.Prepend>
+                                <InputGroup.Text id="inputGroup-sizing-default">Name</InputGroup.Text>
+                            </InputGroup.Prepend>
+                            <input type="text" className="_form_input" defaultValue={edit.name} placeholder={edit.name}
+                                   onChange={(e) => setName(e.target.value)}/>
+                        </InputGroup>
+                        <Button variant="contained" style={{float: "right"}} color="primary" onClick={update}>
+                            Update data
+                        </Button>
                     </div>
-                </Fade>}
+                </Fade>
             </Modal>
         </Paper>
     );

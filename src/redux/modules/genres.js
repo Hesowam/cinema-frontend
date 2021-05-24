@@ -3,7 +3,7 @@ import ServerException from "../../exceptions/ServerException";
 
 const SERVER_CONFIG = require('../../constants/server')
 
-const moduleName = 'films';
+const moduleName = 'genres';
 
 const GET_ALL_GENRES = `${moduleName}/GET_ALL_GENRES`;
 
